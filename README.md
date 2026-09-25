@@ -13,3 +13,7 @@ Every view must disclose its source and status: LIVE, NEAR-LIVE, or OFFLINE. Nev
 The first build establishes the experience and source contract. Camera entries live in `cameras.js`; only embeddable, verifiable sources should be added.
 
 Open → see somewhere → **SOMEWHERE ELSE →**
+
+
+## Source expansion
+WINDOW now spans Monterey Bay, African wildlife at Mpala, and a verified 24/7 Odaiba Tokyo stream. Iceland and beach sources are being admitted only when the underlying operator/embed can be verified; directories alone are not treated as proof of an embeddable live feed.
