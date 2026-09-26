@@ -1,0 +1,11 @@
+// WINDOW LIVE CORRIDOR
+// Generic route geometry only: no dependency on private Victory mapping code.
+(function(){
+ const R=6371,rad=x=>x*Math.PI/180;
+ function km(a,b){const dp=rad(b.lat-a.lat),dl=rad(b.lng-a.lng),q=Math.sin(dp/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
+ function routeStats(points){let total=0;const cumulative=[0];for(let i=1;i<points.length;i++){total+=km(points[i-1],points[i]);cumulative.push(total)}return{total,cumulative}}
+ function samples(points,spacingKm=20){if(points.length<2)return points.map((p,i)=>({...p,routeKm:0,index:i}));const {total,cumulative}=routeStats(points),out=[];for(let target=0;target<=total;target+=spacingKm){let i=1;while(i<cumulative.length&&cumulative[i]<target)i++;if(i>=points.length)i=points.length-1;const a=points[i-1],b=points[i],span=cumulative[i]-cumulative[i-1]||1,t=(target-cumulative[i-1])/span;out.push({lat:a.lat+(b.lat-a.lat)*t,lng:a.lng+(b.lng-a.lng)*t,routeKm:target})}const end=points.at(-1);if(!out.length||out.at(-1).routeKm<total-1)out.push({...end,routeKm:total});return out}
+ function project(camera,routeSamples){let best=null;for(const s of routeSamples){const d=km(camera,s);if(!best||d<best.corridorKm)best={corridorKm:d,routeKm:s.routeKm}}return best}
+ async function watchRoute(points,{spacingKm=20,corridorKm=10}={}){if(!Array.isArray(points)||points.length<2)throw Error('route-needs-two-points');const s=samples(points,spacingKm),batches=await Promise.allSettled(s.map(p=>window.WINDOW_ADAPTERS.search(p))),seen=new Map();for(const b of batches){if(b.status!=='fulfilled')continue;for(const c of b.value){const key=c.id||[c.provider,c.source].join(':');if(!seen.has(key))seen.set(key,c)}}const eyes=[...seen.values()].map(c=>({...c,...project(c,s)})).filter(c=>c.corridorKm<=corridorKm).sort((a,b)=>a.routeKm-b.routeKm||a.corridorKm-b.corridorKm);return{routeKm:routeStats(points).total,samples:s.length,candidates:seen.size,eyes}}
+ window.WINDOW_ROUTE={samples,watchRoute};
+})();
