@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    { "source": "/api/seek", "destination": "/api/seek" }
+  ],
+  "headers": [
+    {
+      "source": "/api/seek",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    }
+  ]
+}
