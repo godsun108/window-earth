@@ -39,3 +39,12 @@ SEEKER now has a provider-neutral adapter layer. The curated registry works enti
 See `api-contract.md` for the normalized discovery-service schema and safety/provenance rules.
 
 The first planned credentialed adapter is Windy Webcams v3 for global nearby discovery, followed by compatible public 511/DOT camera catalogs. These are architecture targets, not claimed active integrations until credentials and deployment exist.
+
+
+## Discovery service implementation
+
+`server/seek.mjs` now implements the first credentialed provider adapter. It validates coordinates, queries Windy Webcams v3 within 250 km when `WINDY_WEBCAMS_API_KEY` is configured server-side, normalizes returned public views into the WINDOW camera contract, isolates provider failure, and emits short-lived cache headers.
+
+It deliberately labels provider results `NEAR-LIVE` unless WINDOW has stronger evidence for a live-video state. No credential is present in this repository and global Windy discovery is therefore not active until a serverless runtime and secret are configured.
+
+The static site remains usable through the curated adapter when the discovery endpoint is unavailable.
