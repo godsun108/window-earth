@@ -55,3 +55,12 @@ The static site remains usable through the curated adapter when the discovery en
 SEEKER now ranks candidates by an explicit heuristic rather than distance alone. The current score combines proximity, source status (LIVE/NEAR-LIVE), media type, declared freshness when available, and camera heading when known. Unknown heading is not penalized as if it were known to be wrong.
 
 The score is a search heuristic, not a factual claim that a camera can see the requested target. Candidate count, winning distance and score are surfaced in the UI. As adapters gain field-of-view and reachability metadata, those signals can be added without changing the source contract.
+
+
+## Deploying discovery
+
+The repository now includes a serverless `/api/seek` entry point and deployment configuration. Configure `WINDY_WEBCAMS_API_KEY` only in the deployment environment; never commit it or expose it to browser JavaScript.
+
+The static GitHub Pages build continues to fall back to the curated registry. A deployment that serves both the site and `/api/seek` activates credentialed discovery without changing the client contract.
+
+Windy media should be treated as short-lived provider data: preserve the source URL/attribution and do not persist expiring image URLs as durable camera records.
