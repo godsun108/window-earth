@@ -25,7 +25,7 @@
   // discovery endpoint. The browser adapter below activates only when that endpoint exists.
   api.register({id:'discovery',label:'WINDOW DISCOVERY SERVICE',mode:'server',async search(p){
     try{
-      const u=new URL('./api/seek',location.href);u.searchParams.set('lat',p.lat);u.searchParams.set('lng',p.lng);
+      const base=window.WINDOW_DISCOVERY_ENDPOINT||'./api/seek';const u=new URL(base,location.href);u.searchParams.set('lat',p.lat);u.searchParams.set('lng',p.lng);
       const r=await fetch(u,{headers:{accept:'application/json'}});if(!r.ok)return[];
       const j=await r.json();return Array.isArray(j.cameras)?j.cameras:[];
     }catch{return[]}
