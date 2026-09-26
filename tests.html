@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><title>WINDOW smoke tests</title><pre id="out">RUNNING…</pre>
+<script src="cameras.js"></script><script src="adapters.js"></script><script src="route.js"></script><script src="routing.js"></script>
+<script>
+(async()=>{const out=document.querySelector('#out'),lines=[],ok=(name,v)=>{if(!v)throw Error(name);lines.push('✓ '+name)};
+try{
+ ok('camera registry exists',Array.isArray(WINDOW_CAMERAS)&&WINDOW_CAMERAS.length>0);
+ ok('adapter registry exists',!!WINDOW_ADAPTERS&&WINDOW_ADAPTERS.list().length>=2);
+ ok('routing adapter exists',!!WINDOW_ROUTING&&WINDOW_ROUTING.modes().includes('driving'));
+ ok('route engine exists',!!WINDOW_ROUTE&&typeof WINDOW_ROUTE.watchRoute==='function');
+ const samples=WINDOW_ROUTE.samples([{lat:27,lng:-80},{lat:27.5,lng:-80}],20);
+ ok('route sampling returns ordered samples',samples.length>=2&&samples.at(-1).routeKm>=samples[0].routeKm);
+ const ranked=WINDOW_ROUTE.rankEyes([{place:'A',provider:'test',source:'#',embed:'#',lat:27.1,lng:-80,routeKm:10,corridorKm:1,status:'LIVE',type:'video'},{place:'B',provider:'test',source:'#',embed:'#',lat:27,lng:-80,routeKm:0,corridorKm:1,status:'LIVE',type:'video'}],2,100);
+ ok('journey state demotes behind eyes',ranked[0].journeyState!=='BEHIND');
+ out.textContent=lines.join('\n')+'\n\nWINDOW CORE: PASS';
+}catch(e){out.textContent=lines.join('\n')+'\n✗ '+e.message+'\n\nWINDOW CORE: FAIL';document.body.dataset.failed='true'}
+})();
+</script>
