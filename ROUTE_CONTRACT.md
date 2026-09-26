@@ -50,3 +50,12 @@ Victory may keep routing, user state and proprietary map logic private. WINDOW o
 - Pin destination eyes.
 - View-cone geometry when heading/FOV are known.
 - Traffic/weather/EARTH NOW observations alongside camera eyes.
+
+
+## Journey-state ranking
+
+LIVE CORRIDOR now accepts `currentKm`, an ephemeral progress value supplied by the caller. Every eye is classified as `BEHIND`, `NOW`, `AHEAD`, or `DESTINATION` and receives a route-utility score.
+
+The score currently rewards public-source truth status, useful media, proximity to the route corridor, and forward relevance. Behind-the-traveler cameras are strongly demoted. The result includes `best`, the most useful current route eye.
+
+This does not require WINDOW to store location history. A host such as Victory can calculate or obtain traveler progress and hand WINDOW only the current progress value.
