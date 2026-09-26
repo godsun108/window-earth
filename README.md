@@ -48,3 +48,10 @@ The first planned credentialed adapter is Windy Webcams v3 for global nearby dis
 It deliberately labels provider results `NEAR-LIVE` unless WINDOW has stronger evidence for a live-video state. No credential is present in this repository and global Windy discovery is therefore not active until a serverless runtime and secret are configured.
 
 The static site remains usable through the curated adapter when the discovery endpoint is unavailable.
+
+
+## BEST VIEW ranking
+
+SEEKER now ranks candidates by an explicit heuristic rather than distance alone. The current score combines proximity, source status (LIVE/NEAR-LIVE), media type, declared freshness when available, and camera heading when known. Unknown heading is not penalized as if it were known to be wrong.
+
+The score is a search heuristic, not a factual claim that a camera can see the requested target. Candidate count, winning distance and score are surfaced in the UI. As adapters gain field-of-view and reachability metadata, those signals can be added without changing the source contract.
