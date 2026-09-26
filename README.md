@@ -30,3 +30,12 @@ Current v0.2 discovery is intentionally conservative: it searches the curated ve
 Planned ranking dimensions: distance, reachability, freshness, LIVE vs NEAR-LIVE, direction/FOV, daylight, quality, and target visibility.
 
 EARTH NOW integration target: pass an event coordinate to WINDOW SEEKER and return the closest trustworthy visual observation.
+
+
+## WINDOW SEEKER — discovery architecture
+
+SEEKER now has a provider-neutral adapter layer. The curated registry works entirely in-browser. Credentialed large-scale providers are reserved for `/api/seek`, so provider secrets never ship in the public client.
+
+See `api-contract.md` for the normalized discovery-service schema and safety/provenance rules.
+
+The first planned credentialed adapter is Windy Webcams v3 for global nearby discovery, followed by compatible public 511/DOT camera catalogs. These are architecture targets, not claimed active integrations until credentials and deployment exist.
