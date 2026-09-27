@@ -1,1 +1,62 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#050708"><title>WINDOW — Somewhere Else</title><meta name="description" content="Find the closest source-verified public views to any location on Earth."><link rel="stylesheet" href="styles.css"></head><body><main><div id="view"><div class="empty"><div class="orb"></div></div></div><div class="shade"></div><header><a class="brand" href="./">WINDOW</a><span id="status">VERIFYING VIEW…</span></header><section class="seeker" aria-label="WINDOW controls"><form id="seekForm"><input id="seekInput" autocomplete="off" placeholder="SEE A PLACE OR LAT, LNG" aria-label="Location"><button>SEEK</button></form><form id="routeForm" class="route-form"><input id="routeFrom" autocomplete="off" placeholder="FROM" aria-label="Route origin"><input id="routeTo" autocomplete="off" placeholder="TO" aria-label="Route destination"><button>WATCH ROUTE</button></form><div id="seekMeta"></div></section><section id="routeTelescope" class="route-telescope" hidden aria-label="Live route telescope"><div class="route-head"><strong>LIVE CORRIDOR</strong><span id="routeMeta"></span></div><div class="route-rail"><span class="route-now">NOW</span><div id="routeEyes" class="route-eyes"></div><span class="route-destination">DESTINATION</span></div></section><section class="copy"><p id="place">EARTH</p><h1>Somewhere else,<br><em>right now.</em></h1><p id="time"></p></section><div class="bottom"><div class="truth"><span id="truthDot"></span><strong id="truth">SOURCE-VERIFIED VIEWS ONLY</strong><a id="source" target="_blank" rel="noreferrer"></a></div><button id="next">SOMEWHERE ELSE <span>→</span></button></div><footer>IF YOU CAN SEE IT, IT'S THERE. · EARTH NOW AWARE</footer></main><script src="cameras.js"></script><script src="adapters.js"></script><script src="route.js"></script><script src="routing.js"></script><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#020405">
+<title>WINDOW — Somewhere Else</title>
+<meta name="description" content="Open a source-verified public window somewhere else on Earth, right now.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main>
+  <div id="view"><div class="empty"><div class="orb"></div></div></div>
+  <div class="shade"></div>
+  <div class="grain"></div>
+
+  <header>
+    <a class="brand" href="./">WINDOW</a>
+    <div class="top-right">
+      <span id="status">VERIFYING VIEW…</span>
+      <button id="toolsToggle" class="text-button" type="button" aria-expanded="false" aria-controls="tools">SEEK EARTH +</button>
+    </div>
+  </header>
+
+  <section class="copy" aria-live="polite">
+    <p class="eyebrow">A WINDOW OPENED IN</p>
+    <h1 id="place">EARTH</h1>
+    <p id="time"></p>
+  </section>
+
+  <section class="seeker" id="tools" aria-label="WINDOW instruments" hidden>
+    <div class="tools-head"><span>SEEK EARTH</span><button id="toolsClose" class="text-button" type="button">CLOSE ×</button></div>
+    <p class="tools-note">Name a place, use coordinates, or watch verified eyes along a route.</p>
+    <form id="seekForm">
+      <input id="seekInput" autocomplete="off" placeholder="TOKYO · ICELAND · 27.27, -80.36" aria-label="Location">
+      <button>OPEN NEAREST EYE</button>
+    </form>
+    <form id="routeForm" class="route-form">
+      <input id="routeFrom" autocomplete="off" placeholder="FROM" aria-label="Route origin">
+      <input id="routeTo" autocomplete="off" placeholder="TO" aria-label="Route destination">
+      <button>WATCH ROUTE</button>
+    </form>
+    <div id="seekMeta"></div>
+  </section>
+
+  <section id="routeTelescope" class="route-telescope" hidden aria-label="Live route telescope">
+    <div class="route-head"><strong>LIVE CORRIDOR</strong><span id="routeMeta"></span></div>
+    <div class="route-rail"><span class="route-now">NOW</span><div id="routeEyes" class="route-eyes"></div><span class="route-destination">DESTINATION</span></div>
+  </section>
+
+  <div class="bottom">
+    <div class="truth">
+      <span id="truthDot"></span>
+      <div><strong id="truth">SOURCE-VERIFIED VIEWS ONLY</strong><a id="source" target="_blank" rel="noreferrer"></a></div>
+    </div>
+    <button id="next" class="jump"><small>OPEN ANOTHER WINDOW</small><span>SOMEWHERE ELSE&nbsp; →</span></button>
+  </div>
+
+  <footer>IF YOU CAN SEE IT, IT'S THERE.</footer>
+</main>
+<script src="cameras.js"></script><script src="adapters.js"></script><script src="route.js"></script><script src="routing.js"></script><script src="app.js"></script>
+</body></html>
