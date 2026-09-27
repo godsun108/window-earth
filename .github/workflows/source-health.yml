@@ -1,0 +1,38 @@
+name: WINDOW Source Health
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: window-source-health
+  cancel-in-progress: false
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install media probe
+        run: python -m pip install --disable-pip-version-check yt-dlp
+      - name: Probe registered YouTube media
+        run: python scripts/source_health.py
+      - name: Commit health manifest when changed
+        run: |
+          if git diff --quiet -- source-health.json; then
+            echo "No source-health change."
+            exit 0
+          fi
+          git config user.name "window-health-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add source-health.json
+          git commit -m "Update WINDOW source health"
+          git pull --rebase origin main
+          git push
