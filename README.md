@@ -29,7 +29,7 @@ Current v0.2 discovery is intentionally conservative: it searches the curated ve
 
 Planned ranking dimensions: distance, reachability, freshness, LIVE vs NEAR-LIVE, direction/FOV, daylight, quality, and target visibility.
 
-EARTH NOW integration target: pass an event coordinate to WINDOW SEEKER and return the closest trustworthy visual observation.
+EARTH NOW integration: **active**. Geographic EARTH NOW observations pass `lat`, `lng`, `from=earth-now`, and optional event context through WINDOW's public URL contract. WINDOW automatically runs SEEKER and returns its best source-verified candidate. CNEOS visualization anchors are never handed off as geographic positions.
 
 
 ## WINDOW SEEKER — discovery architecture
