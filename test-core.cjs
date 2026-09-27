@@ -8,6 +8,7 @@ ok('Earth-first interface has primary jump',html.includes('SOMEWHERE ELSE')&&htm
 ok('SEEK instruments are collapsible',html.includes('id="tools"')&&html.includes('hidden')&&app.includes('function setTools'));
 ok('Earth Now handoff reveals context',app.includes("incoming.get('from')==='earth-now'")&&app.includes('setTools(true)'));
 ok('camera registry exists',Array.isArray(WINDOW_CAMERAS)&&WINDOW_CAMERAS.length>0);
+ok('known private Iceland embed is quarantined',!WINDOW_CAMERAS.some(c=>String(c.embed).includes('bEOPDN710JQ')));
 ok('adapter registry exists',WINDOW_ADAPTERS&&WINDOW_ADAPTERS.list().length>=2);
 ok('routing adapter exists',WINDOW_ROUTING&&WINDOW_ROUTING.modes().includes('driving'));
 ok('route engine exists',WINDOW_ROUTE&&typeof WINDOW_ROUTE.watchRoute==='function');
