@@ -1,8 +1,12 @@
 const fs=require('fs'),vm=require('vm');
+const html=fs.readFileSync('index.html','utf8'),app=fs.readFileSync('app.js','utf8');
 global.window=global; global.location={href:'https://example.test/'};
 global.fetch=async()=>({ok:false,json:async()=>({})});
 for(const f of ['cameras.js','adapters.js','route.js','routing.js']) vm.runInThisContext(fs.readFileSync(f,'utf8'),{filename:f});
 function ok(name,v){if(!v)throw new Error(name); console.log('✓ '+name)}
+ok('Earth-first interface has primary jump',html.includes('SOMEWHERE ELSE')&&html.includes('OPEN ANOTHER WINDOW'));
+ok('SEEK instruments are collapsible',html.includes('id="tools"')&&html.includes('hidden')&&app.includes('function setTools'));
+ok('Earth Now handoff reveals context',app.includes("incoming.get('from')==='earth-now'")&&app.includes('setTools(true)'));
 ok('camera registry exists',Array.isArray(WINDOW_CAMERAS)&&WINDOW_CAMERAS.length>0);
 ok('adapter registry exists',WINDOW_ADAPTERS&&WINDOW_ADAPTERS.list().length>=2);
 ok('routing adapter exists',WINDOW_ROUTING&&WINDOW_ROUTING.modes().includes('driving'));
