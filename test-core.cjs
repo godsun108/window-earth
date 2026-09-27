@@ -9,6 +9,7 @@ ok('SEEK instruments are collapsible',html.includes('id="tools"')&&html.includes
 ok('Earth Now handoff reveals context',app.includes("incoming.get('from')==='earth-now'")&&app.includes('setTools(true)'));
 ok('camera registry exists',Array.isArray(WINDOW_CAMERAS)&&WINDOW_CAMERAS.length>0);
 ok('known private Iceland embed is quarantined',!WINDOW_CAMERAS.some(c=>String(c.embed).includes('bEOPDN710JQ')));
+ok('known unavailable Odaiba embed is quarantined',!WINDOW_CAMERAS.some(c=>String(c.embed).includes('fdkVkWU99DI')));
 ok('registry never treats source webpages as camera media',!WINDOW_CAMERAS.some(c=>/^https?:\/\/www\.nps\.gov\/media\/webcam\/view\.htm/i.test(String(c.embed))));
 ok('iframe views use embeddable media surfaces',WINDOW_CAMERAS.filter(c=>c.type==='iframe').every(c=>/youtube-nocookie\.com\/embed\//.test(String(c.embed))));
 ok('adapter registry exists',WINDOW_ADAPTERS&&WINDOW_ADAPTERS.list().length>=2);
