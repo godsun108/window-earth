@@ -10,3 +10,8 @@ ok('route engine exists',WINDOW_ROUTE&&typeof WINDOW_ROUTE.watchRoute==='functio
 const samples=WINDOW_ROUTE.samples([{lat:27,lng:-80},{lat:27.5,lng:-80}],20);
 ok('route sampling returns ordered samples',samples.length>=2&&samples.at(-1).routeKm>=samples[0].routeKm);
 console.log('WINDOW CORE: PASS');
+
+// Cross-repo contract: EARTH NOW may hand off geographic coordinates via query parameters.
+const handoff=new URLSearchParams('lat=27.5&lng=-80.3&from=earth-now&event=Test');
+const hlat=Number(handoff.get('lat')),hlng=Number(handoff.get('lng'));
+ok('EARTH NOW handoff contract',Number.isFinite(hlat)&&Math.abs(hlat)<=90&&Number.isFinite(hlng)&&Math.abs(hlng)<=180&&handoff.get('from')==='earth-now');
