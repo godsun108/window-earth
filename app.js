@@ -9,7 +9,7 @@ function fallback(){view.innerHTML='<div class="empty"><div class="orb"></div></
 let sourceHealth=null;
 function videoId(c){const m=String(c.embed||'').match(/youtube-nocookie\\.com\\/embed\\/([A-Za-z0-9_-]{6,})/);return m&&m[1]}
 function healthy(c){const id=videoId(c);return !id||!sourceHealth||!sourceHealth.youtube||!sourceHealth.youtube[id]||sourceHealth.youtube[id].healthy!==false}
-function pool(){const a=ranked||window.WINDOW_CAMERAS||[];const good=a.filter(healthy);return good.length?good:a}
+function pool(){const a=ranked||window.WINDOW_CAMERAS||[];return a.filter(healthy)}
 const healthReady=fetch('source-health.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{sourceHealth=j;return j}).catch(()=>null);
 let lastEyeId=null,lastSeed=-1;
 const GLOBAL_SEEDS=[
