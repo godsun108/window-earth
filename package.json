@@ -1,0 +1,13 @@
+{
+  "name": "window-earth",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "WINDOW — verified public eyes on Earth",
+  "scripts": {
+    "start": "node railway-server.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
