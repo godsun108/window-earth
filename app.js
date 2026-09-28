@@ -10,7 +10,27 @@ function videoId(c){const m=String(c.embed||'').match(/youtube-nocookie\\.com\\/
 function healthy(c){const id=videoId(c);return !id||!sourceHealth||!sourceHealth.youtube||!sourceHealth.youtube[id]||sourceHealth.youtube[id].healthy===true}
 function pool(){const a=ranked||window.WINDOW_CAMERAS||[];return a.filter(healthy)}
 fetch('source-health.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{sourceHealth=j}).catch(()=>{});
-function somewhere(){const a=pool();if(!a.length)return fallback();let n=Math.floor(Math.random()*a.length);if(a.length>1&&n===current)n=(n+1)%a.length;current=n;show(a[n])}
+const GLOBAL_SEEDS=[
+ {lat:40.7128,lng:-74.0060},{lat:51.5074,lng:-0.1278},{lat:48.8566,lng:2.3522},
+ {lat:35.6762,lng:139.6503},{lat:-33.8688,lng:151.2093},{lat:1.3521,lng:103.8198},
+ {lat:-23.5505,lng:-46.6333},{lat:37.7749,lng:-122.4194},{lat:41.9028,lng:12.4964},
+ {lat:52.52,lng:13.405},{lat:25.2048,lng:55.2708},{lat:19.4326,lng:-99.1332}
+];
+let somewhereNonce=0;
+async function somewhere(){
+ const token=++somewhereNonce;status.textContent='SEEKING EARTH';place.textContent='OPENING A WINDOW…';time.textContent='';
+ if(window.WINDOW_ADAPTERS){
+   const start=Math.floor(Math.random()*GLOBAL_SEEDS.length);
+   for(let i=0;i<Math.min(4,GLOBAL_SEEDS.length);i++){
+     try{
+       const p=GLOBAL_SEEDS[(start+i)%GLOBAL_SEEDS.length],found=(await window.WINDOW_ADAPTERS.search(p)).filter(healthy);
+       if(token!==somewhereNonce)return;
+       if(found.length){ranked=found.map(c=>bestView(c,p)).sort((a,b)=>b.bestViewScore-a.bestViewScore);current=0;show(ranked[0]);return}
+     }catch{}
+   }
+ }
+ const a=pool();if(!a.length)return fallback();let n=Math.floor(Math.random()*a.length);if(a.length>1&&n===current)n=(n+1)%a.length;current=n;show(a[n])
+}
 function coords(q){const m=q.trim().match(/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/);if(!m)return null;const lat=+m[1],lng=+m[2];return Math.abs(lat)<=90&&Math.abs(lng)<=180?{lat,lng,label:q.trim()}:null}
 async function geocode(q){const direct=coords(q);if(direct)return direct;const u='https://geocoding-api.open-meteo.com/v1/search?count=1&language=en&format=json&name='+encodeURIComponent(q);const r=await fetch(u);if(!r.ok)throw Error('geocoder');const j=await r.json(),x=j.results&&j.results[0];if(!x)throw Error('not-found');return{lat:x.latitude,lng:x.longitude,label:[x.name,x.admin1,x.country].filter(Boolean).join(', ')}}
 function bestView(c,p){const distanceKm=km(p.lat,p.lng,c.lat,c.lng),distance=55/(1+distanceKm/25),status=c.status==='LIVE'?18:c.status==='NEAR-LIVE'?10:0,media=c.type==='video'?12:c.type==='iframe'?10:5,fresh=Number.isFinite(c.freshnessSeconds)?Math.max(0,10-Math.log10(1+c.freshnessSeconds)*3):0;let direction=0,directionKnown=false;if(Number.isFinite(c.heading)){directionKnown=true;const r=Math.PI/180,y=Math.sin((p.lng-c.lng)*r)*Math.cos(p.lat*r),x=Math.cos(c.lat*r)*Math.sin(p.lat*r)-Math.sin(c.lat*r)*Math.cos(p.lat*r)*Math.cos((p.lng-c.lng)*r),bearing=(Math.atan2(y,x)/r+360)%360,diff=Math.abs(((bearing-c.heading+540)%360)-180);direction=10*Math.max(0,1-diff/90)}return{...c,distanceKm,bestViewScore:Math.round((distance+status+media+fresh+direction)*10)/10,scoreEvidence:{distance:Math.round(distance*10)/10,status,media,freshness:Math.round(fresh*10)/10,direction:Math.round(direction*10)/10,directionKnown}}}
