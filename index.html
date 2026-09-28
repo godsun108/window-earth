@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#020405">
 <title>WINDOW — Somewhere Else</title>
 <meta name="description" content="Open a source-verified public window somewhere else on Earth, right now.">
-<link rel="stylesheet" href="styles.css?v=20260928-11">
+<link rel="stylesheet" href="styles.css?v=20260928-12">
 </head>
 <body>
 <main>
@@ -15,7 +15,7 @@
   <div class="grain"></div>
 
   <header>
-    <a class="brand" href="./">WINDOW</a>
+    <div class="brand-row"><a id="portalReturn" class="portal-return" href="https://godsun108.github.io/The-portal/?station=reality" hidden>← REALITY</a><a class="brand" href="./">WINDOW</a></div>
     <div class="top-right">
       <span id="status">VERIFYING VIEW…</span>
       <button id="toolsToggle" class="text-button" type="button" aria-expanded="false" aria-controls="tools">SEEK EARTH +</button>
@@ -59,7 +59,7 @@
   <footer>IF YOU CAN SEE IT, IT'S THERE.</footer>
 </main>
 <script>
-(function(){
+(function(){var pr=document.getElementById("portalReturn");if(new URLSearchParams(location.search).get("from")==="portal")pr.hidden=false;
   var seeds=[[40.7128,-74.006],[35.6762,139.6503],[51.5074,-.1278],[37.7749,-122.4194]];
   var p=seeds[Math.floor(Math.random()*seeds.length)],u='/api/seek?lat='+p[0]+'&lng='+p[1]+'&boot=1';
   fetch(u,{cache:'no-store',headers:{accept:'application/json'}}).then(function(r){return r.ok?r.json():Promise.reject(r.status)}).then(function(j){
@@ -75,5 +75,5 @@
     var so=document.getElementById('source');if(so&&x.source){so.href=x.source;so.textContent='OPEN SOURCE ↗'}
   }).catch(function(e){var st=document.getElementById('status');if(st)st.textContent='DISCOVERY UNAVAILABLE'});
 })();
-</script><script src="cameras.js?v=20260928-11"></script><script src="adapters.js?v=20260928-11"></script><script src="route.js?v=20260928-11"></script><script src="routing.js?v=20260928-11"></script><script src="app.js?v=20260928-11"></script>
+</script><script src="cameras.js?v=20260928-12"></script><script src="adapters.js?v=20260928-12"></script><script src="route.js?v=20260928-12"></script><script src="routing.js?v=20260928-12"></script><script src="app.js?v=20260928-12"></script>
 </body></html>
