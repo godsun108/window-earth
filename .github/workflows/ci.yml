@@ -17,3 +17,5 @@ jobs:
           node-version: '22'
       - name: Run WINDOW core smoke test
         run: node test-core.cjs
+      - name: Verify discovery service contract
+        run: node test-discovery.mjs
