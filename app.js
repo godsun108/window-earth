@@ -3,7 +3,7 @@ function setTools(open){tools.hidden=!open;document.body.classList.toggle('tools
 toolsToggle.onclick=()=>setTools(tools.hidden);toolsClose.onclick=()=>setTools(false);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tools.hidden)setTools(false)});
 function local(c){try{return new Intl.DateTimeFormat('en-US',{timeZone:c.tz,weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZoneName:'short'}).format(new Date())}catch{return''}}
 function km(a,b,c,d){const R=6371,r=x=>x*Math.PI/180,dp=r(c-a),dl=r(d-b),q=Math.sin(dp/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
-let renderToken=0;function show(c){const token=++renderToken;view.classList.remove('arrive');void view.offsetWidth;view.classList.add('arrive');view.innerHTML='';let el,settled=false;const ok=()=>{if(token!==renderToken)return;settled=true;view.classList.add('has-eye')};const fail=()=>{if(token!==renderToken||settled)return;settled=true;console.warn('WINDOW eye failed',c.place,c.embed);tryNext(c)};if(c.type==='iframe'){el=document.createElement('iframe');el.src=c.embed;el.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';el.allowFullscreen=true;el.onload=ok}else if(c.type==='video'){el=document.createElement('video');el.src=c.embed;el.autoplay=true;el.muted=true;el.playsInline=true;el.controls=true;el.onloadeddata=ok;el.onerror=fail;el.play().catch(()=>{})}else{el=document.createElement('img');el.src=c.embed;el.alt=c.place;el.onload=ok;el.onerror=fail}view.appendChild(el);place.textContent=c.place.toUpperCase();status.textContent='OPENING '+c.status+' EYE';truth.textContent=c.status+' SOURCE · '+c.provider.toUpperCase();source.textContent='OPEN SOURCE ↗';source.href=c.source;time.textContent=local(c);setTimeout(()=>{if(!settled&&c.type!=='iframe')fail();else if(!settled&&c.type==='iframe'){status.textContent=c.status+' SOURCE';ok()}},8000)}
+let renderToken=0;function show(c){lastEyeId=c.id||c.embed;const token=++renderToken;view.classList.remove('arrive');void view.offsetWidth;view.classList.add('arrive');view.innerHTML='';let el,settled=false;const ok=()=>{if(token!==renderToken)return;settled=true;view.classList.add('has-eye');status.textContent=c.status+' SOURCE';next.classList.remove('loading');next.disabled=false};const fail=()=>{if(token!==renderToken||settled)return;settled=true;console.warn('WINDOW eye failed',c.place,c.embed);tryNext(c)};if(c.type==='iframe'){el=document.createElement('iframe');el.src=c.embed;el.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';el.allowFullscreen=true;el.onload=ok}else if(c.type==='video'){el=document.createElement('video');el.src=c.embed;el.autoplay=true;el.muted=true;el.playsInline=true;el.controls=true;el.onloadeddata=ok;el.onerror=fail;el.play().catch(()=>{})}else{el=document.createElement('img');el.src=c.embed;el.alt=c.place;el.onload=ok;el.onerror=fail}view.appendChild(el);place.textContent=c.place.toUpperCase();status.textContent='OPENING '+c.status+' EYE';truth.textContent=c.status+' SOURCE · '+c.provider.toUpperCase();source.textContent='OPEN SOURCE ↗';source.href=c.source;time.textContent=local(c);setTimeout(()=>{if(!settled&&c.type!=='iframe')fail();else if(!settled&&c.type==='iframe'){status.textContent=c.status+' SOURCE';ok()}},8000)}
 function tryNext(failed){const a=ranked?.length?ranked:pool();const i=a.indexOf(failed);for(let step=1;step<=a.length;step++){const n=(Math.max(i,0)+step)%a.length;if(a[n]&&a[n]!==failed){current=n;show(a[n]);return}}fallback()}
 function fallback(){view.innerHTML='<div class="empty"><div class="orb"></div></div>';place.textContent='NO VERIFIED WINDOW AVAILABLE';time.textContent='EARTH IS STILL THERE. THE EYES ARE NOT.';status.textContent='NO ELIGIBLE SOURCE';truth.textContent='ABSENCE IS PREFERABLE TO FICTION';source.textContent='';source.removeAttribute('href')}
 let sourceHealth=null;
@@ -11,6 +11,7 @@ function videoId(c){const m=String(c.embed||'').match(/youtube-nocookie\\.com\\/
 function healthy(c){const id=videoId(c);return !id||!sourceHealth||!sourceHealth.youtube||!sourceHealth.youtube[id]||sourceHealth.youtube[id].healthy!==false}
 function pool(){const a=ranked||window.WINDOW_CAMERAS||[];const good=a.filter(healthy);return good.length?good:a}
 const healthReady=fetch('source-health.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{sourceHealth=j;return j}).catch(()=>null);
+let lastEyeId=null,lastSeed=-1;
 const GLOBAL_SEEDS=[
  {lat:40.7128,lng:-74.0060},{lat:51.5074,lng:-0.1278},{lat:48.8566,lng:2.3522},
  {lat:35.6762,lng:139.6503},{lat:-33.8688,lng:151.2093},{lat:1.3521,lng:103.8198},
@@ -24,13 +25,13 @@ async function discoverAt(p){
  const j=await r.json();return Array.isArray(j.cameras)?j.cameras.filter(healthy):[];
 }
 async function somewhere(){
- await Promise.race([healthReady,new Promise(r=>setTimeout(r,900))]);const token=++somewhereNonce;status.textContent='SEEKING EARTH';place.textContent='OPENING A WINDOW…';time.textContent='';
- const start=Math.floor(Math.random()*GLOBAL_SEEDS.length);
+ await Promise.race([healthReady,new Promise(r=>setTimeout(r,900))]);const token=++somewhereNonce;next.classList.add('loading');next.disabled=true;status.textContent='SEEKING EARTH';place.textContent='OPENING A WINDOW…';time.textContent='';
+ let start=Math.floor(Math.random()*GLOBAL_SEEDS.length);if(GLOBAL_SEEDS.length>1&&start===lastSeed)start=(start+1)%GLOBAL_SEEDS.length;lastSeed=start;
  for(let i=0;i<Math.min(4,GLOBAL_SEEDS.length);i++){
    try{
      const p=GLOBAL_SEEDS[(start+i)%GLOBAL_SEEDS.length],found=await discoverAt(p);
      if(token!==somewhereNonce)return;
-     if(found.length){ranked=found.map(c=>bestView(c,p)).sort((a,b)=>b.bestViewScore-a.bestViewScore);current=0;show(ranked[0]);return}
+     if(found.length){ranked=found.map(c=>bestView(c,p)).filter(c=>(c.id||c.embed)!==lastEyeId).sort((a,b)=>b.bestViewScore-a.bestViewScore);if(!ranked.length)ranked=found.map(c=>bestView(c,p)).sort((a,b)=>b.bestViewScore-a.bestViewScore);current=0;show(ranked[0]);return}
    }catch(e){console.warn('WINDOW discovery attempt failed',e)}
  }
  const a=pool();if(!a.length)return fallback();let n=Math.floor(Math.random()*a.length);if(a.length>1&&n===current)n=(n+1)%a.length;current=n;show(a[n])
