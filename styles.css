@@ -8,3 +8,6 @@ body.tools-open .copy,body.tools-open .bottom{opacity:.28;transition:opacity .25
 
 @media(max-width:650px){header{padding-left:18px;padding-right:18px}.top-right{gap:12px}#status{display:none}.copy{left:20px;bottom:29vh;max-width:calc(100vw - 40px)}.copy h1{font-size:clamp(40px,13vw,64px)}.bottom{left:20px;right:20px;bottom:50px;display:grid;gap:16px}.jump{width:100%;min-width:0}.truth{order:2}.seeker{padding-left:20px;padding-right:20px}.route-telescope{left:20px;right:20px;bottom:151px}.route-destination{display:none}.route-rail{grid-template-columns:auto 1fr}.route-eye small{font-size:6px}footer{left:20px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Mobile interaction reliability */
+button,a,input{touch-action:manipulation}button,.text-button,.jump,#seekForm button,#routeForm button,.route-eye{min-height:44px}.jump,.text-button{cursor:pointer;-webkit-tap-highlight-color:rgba(255,255,255,.12)}
