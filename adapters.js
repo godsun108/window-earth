@@ -16,7 +16,9 @@
     list(){return adapters.map(a=>({id:a.id,label:a.label||a.id,mode:a.mode||'browser'}))},
     async search(point){
       const settled=await Promise.allSettled(adapters.map(async a=>(await a.search(point)||[]).map(c=>normalize(c,a)).filter(valid)));
-      return settled.flatMap(r=>r.status==='fulfilled'?r.value:[]);
+      const rows=settled.flatMap(r=>r.status==='fulfilled'?r.value:[]);
+      const seen=new Set();
+      return rows.filter(c=>{const key=[String(c.source||'').replace(/\/$/,''),Number(c.lat).toFixed(5),Number(c.lng).toFixed(5)].join('|');if(seen.has(key))return false;seen.add(key);return true});
     }
   };
   window.WINDOW_ADAPTERS=api;
