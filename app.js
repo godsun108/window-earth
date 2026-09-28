@@ -17,17 +17,20 @@ const GLOBAL_SEEDS=[
  {lat:52.52,lng:13.405},{lat:25.2048,lng:55.2708},{lat:19.4326,lng:-99.1332}
 ];
 let somewhereNonce=0;
+async function discoverAt(p){
+ const u=new URL('/api/seek',location.origin);u.searchParams.set('lat',p.lat);u.searchParams.set('lng',p.lng);
+ const r=await fetch(u,{headers:{accept:'application/json'},cache:'no-store'});if(!r.ok)throw Error('discovery-'+r.status);
+ const j=await r.json();return Array.isArray(j.cameras)?j.cameras.filter(healthy):[];
+}
 async function somewhere(){
  const token=++somewhereNonce;status.textContent='SEEKING EARTH';place.textContent='OPENING A WINDOW…';time.textContent='';
- if(window.WINDOW_ADAPTERS){
-   const start=Math.floor(Math.random()*GLOBAL_SEEDS.length);
-   for(let i=0;i<Math.min(4,GLOBAL_SEEDS.length);i++){
-     try{
-       const p=GLOBAL_SEEDS[(start+i)%GLOBAL_SEEDS.length],found=(await window.WINDOW_ADAPTERS.search(p)).filter(healthy);
-       if(token!==somewhereNonce)return;
-       if(found.length){ranked=found.map(c=>bestView(c,p)).sort((a,b)=>b.bestViewScore-a.bestViewScore);current=0;show(ranked[0]);return}
-     }catch{}
-   }
+ const start=Math.floor(Math.random()*GLOBAL_SEEDS.length);
+ for(let i=0;i<Math.min(4,GLOBAL_SEEDS.length);i++){
+   try{
+     const p=GLOBAL_SEEDS[(start+i)%GLOBAL_SEEDS.length],found=await discoverAt(p);
+     if(token!==somewhereNonce)return;
+     if(found.length){ranked=found.map(c=>bestView(c,p)).sort((a,b)=>b.bestViewScore-a.bestViewScore);current=0;show(ranked[0]);return}
+   }catch(e){console.warn('WINDOW discovery attempt failed',e)}
  }
  const a=pool();if(!a.length)return fallback();let n=Math.floor(Math.random()*a.length);if(a.length>1&&n===current)n=(n+1)%a.length;current=n;show(a[n])
 }
