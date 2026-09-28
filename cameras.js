@@ -1,6 +1,7 @@
 // Verified-source registry. Coordinates are approximate camera/site locations used for proximity ranking.
 // Availability varies by provider schedule; WINDOW never upgrades a feed's truth label merely because it loads.
 window.WINDOW_CAMERAS=[
+ {type:"iframe",place:"Maunakea Summit · CFHT West",lat:19.826,lng:-155.47,tz:"Pacific/Honolulu",status:"LIVE",provider:"CFHT × Asahi",embed:"https://www.youtube-nocookie.com/embed/qh6Nqiq6LIg?autoplay=1&mute=1&controls=1&playsinline=1",source:"https://subarutelescope.org/en/news/topics/2025/02/03/3503.html"},
  {type:"iframe",place:"Monterey Bay, California",lat:36.618,lng:-121.901,tz:"America/Los_Angeles",status:"NEAR-LIVE",provider:"Monterey Bay Aquarium",embed:"https://www.youtube-nocookie.com/embed/fuCeRkeDxtQ?autoplay=1&mute=1&controls=1&playsinline=1",source:"https://www.montereybayaquarium.org/cams-videos/live-cams/monterey-bay-cam"},
  {type:"iframe",place:"Open Sea · Monterey, California",lat:36.618,lng:-121.901,tz:"America/Los_Angeles",status:"NEAR-LIVE",provider:"Monterey Bay Aquarium",embed:"https://www.youtube-nocookie.com/embed/nNTVZKz219U?autoplay=1&mute=1&controls=1&playsinline=1",source:"https://www.montereybayaquarium.org/cams-videos/live-cams/open-sea-cam"},
  {type:"iframe",place:"Maui, Hawaiʻi",lat:20.798,lng:-156.332,tz:"Pacific/Honolulu",status:"LIVE",provider:"AlohaLiveCam",embed:"https://www.youtube-nocookie.com/embed/Nwnk_jmAMyk?autoplay=1&mute=1&controls=1&playsinline=1",source:"https://www.youtube.com/watch?v=Nwnk_jmAMyk"},
