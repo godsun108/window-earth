@@ -3,13 +3,14 @@ function setTools(open){tools.hidden=!open;document.body.classList.toggle('tools
 toolsToggle.onclick=()=>setTools(tools.hidden);toolsClose.onclick=()=>setTools(false);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tools.hidden)setTools(false)});
 function local(c){try{return new Intl.DateTimeFormat('en-US',{timeZone:c.tz,weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZoneName:'short'}).format(new Date())}catch{return''}}
 function km(a,b,c,d){const R=6371,r=x=>x*Math.PI/180,dp=r(c-a),dl=r(d-b),q=Math.sin(dp/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
-function show(c){view.classList.remove('arrive');void view.offsetWidth;view.classList.add('arrive');view.innerHTML='';let el;if(c.type==='iframe'){el=document.createElement('iframe');el.src=c.embed;el.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';el.allowFullscreen=true}else if(c.type==='video'){el=document.createElement('video');el.src=c.embed;el.autoplay=true;el.muted=true;el.playsInline=true;el.controls=true}else{el=document.createElement('img');el.src=c.embed;el.alt=c.place}view.appendChild(el);place.textContent=c.place.toUpperCase();status.textContent=c.status+' SOURCE';truth.textContent=c.status+' SOURCE · '+c.provider.toUpperCase();source.textContent='OPEN SOURCE ↗';source.href=c.source;time.textContent=local(c)}
+let renderToken=0;function show(c){const token=++renderToken;view.classList.remove('arrive');void view.offsetWidth;view.classList.add('arrive');view.innerHTML='';let el,settled=false;const ok=()=>{if(token!==renderToken)return;settled=true;view.classList.add('has-eye')};const fail=()=>{if(token!==renderToken||settled)return;settled=true;console.warn('WINDOW eye failed',c.place,c.embed);tryNext(c)};if(c.type==='iframe'){el=document.createElement('iframe');el.src=c.embed;el.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';el.allowFullscreen=true;el.onload=ok}else if(c.type==='video'){el=document.createElement('video');el.src=c.embed;el.autoplay=true;el.muted=true;el.playsInline=true;el.controls=true;el.onloadeddata=ok;el.onerror=fail;el.play().catch(()=>{})}else{el=document.createElement('img');el.src=c.embed;el.alt=c.place;el.onload=ok;el.onerror=fail}view.appendChild(el);place.textContent=c.place.toUpperCase();status.textContent='OPENING '+c.status+' EYE';truth.textContent=c.status+' SOURCE · '+c.provider.toUpperCase();source.textContent='OPEN SOURCE ↗';source.href=c.source;time.textContent=local(c);setTimeout(()=>{if(!settled&&c.type!=='iframe')fail();else if(!settled&&c.type==='iframe'){status.textContent=c.status+' SOURCE';ok()}},8000)}
+function tryNext(failed){const a=ranked?.length?ranked:pool();const i=a.indexOf(failed);for(let step=1;step<=a.length;step++){const n=(Math.max(i,0)+step)%a.length;if(a[n]&&a[n]!==failed){current=n;show(a[n]);return}}fallback()}
 function fallback(){view.innerHTML='<div class="empty"><div class="orb"></div></div>';place.textContent='NO VERIFIED WINDOW AVAILABLE';time.textContent='EARTH IS STILL THERE. THE EYES ARE NOT.';status.textContent='NO ELIGIBLE SOURCE';truth.textContent='ABSENCE IS PREFERABLE TO FICTION';source.textContent='';source.removeAttribute('href')}
 let sourceHealth=null;
 function videoId(c){const m=String(c.embed||'').match(/youtube-nocookie\\.com\\/embed\\/([A-Za-z0-9_-]{6,})/);return m&&m[1]}
-function healthy(c){const id=videoId(c);return !id||!sourceHealth||!sourceHealth.youtube||!sourceHealth.youtube[id]||sourceHealth.youtube[id].healthy===true}
-function pool(){const a=ranked||window.WINDOW_CAMERAS||[];return a.filter(healthy)}
-fetch('source-health.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{sourceHealth=j}).catch(()=>{});
+function healthy(c){const id=videoId(c);return !id||!sourceHealth||!sourceHealth.youtube||!sourceHealth.youtube[id]||sourceHealth.youtube[id].healthy!==false}
+function pool(){const a=ranked||window.WINDOW_CAMERAS||[];const good=a.filter(healthy);return good.length?good:a}
+const healthReady=fetch('source-health.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{sourceHealth=j;return j}).catch(()=>null);
 const GLOBAL_SEEDS=[
  {lat:40.7128,lng:-74.0060},{lat:51.5074,lng:-0.1278},{lat:48.8566,lng:2.3522},
  {lat:35.6762,lng:139.6503},{lat:-33.8688,lng:151.2093},{lat:1.3521,lng:103.8198},
@@ -23,7 +24,7 @@ async function discoverAt(p){
  const j=await r.json();return Array.isArray(j.cameras)?j.cameras.filter(healthy):[];
 }
 async function somewhere(){
- const token=++somewhereNonce;status.textContent='SEEKING EARTH';place.textContent='OPENING A WINDOW…';time.textContent='';
+ await Promise.race([healthReady,new Promise(r=>setTimeout(r,900))]);const token=++somewhereNonce;status.textContent='SEEKING EARTH';place.textContent='OPENING A WINDOW…';time.textContent='';
  const start=Math.floor(Math.random()*GLOBAL_SEEDS.length);
  for(let i=0;i<Math.min(4,GLOBAL_SEEDS.length);i++){
    try{
