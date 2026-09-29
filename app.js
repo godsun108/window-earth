@@ -20,7 +20,7 @@ const GLOBAL_SEEDS=[
 ];
 let somewhereNonce=0;
 async function discoverAt(p){
- const u=new URL('/api/seek',location.origin);u.searchParams.set('lat',p.lat);u.searchParams.set('lng',p.lng);
+ const u=new URL(window.WINDOW_DISCOVERY_ENDPOINT||'/api/seek',location.origin);u.searchParams.set('lat',p.lat);u.searchParams.set('lng',p.lng);
  const r=await fetch(u,{headers:{accept:'application/json'},cache:'no-store'});if(!r.ok)throw Error('discovery-'+r.status);
  const j=await r.json();return Array.isArray(j.cameras)?j.cameras.filter(healthy):[];
 }
