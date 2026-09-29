@@ -19,3 +19,7 @@ jobs:
         run: node test-core.cjs
       - name: Verify discovery service contract
         run: node test-discovery.mjs
+      - name: Enforce release fingerprint
+        run: |
+          grep -q 'app.js?v=20260929-1' index.html
+          ! grep -q 'app.js?v=20260928-13' index.html
