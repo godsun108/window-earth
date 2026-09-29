@@ -23,6 +23,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Stamp immutable release fingerprint
+        run: |
+          python - <<'PY'
+          import os,re
+          p='index.html'; s=open(p).read(); sha=os.environ['GITHUB_SHA'][:12]
+          s=re.sub(r'([A-Za-z0-9_./-]+\.(?:js|css))\?v=[^"\']+',lambda m:m.group(1)+'?v='+sha,s)
+          open(p,'w').write(s)
+          open('release.json','w').write('{"sha":"'+os.environ['GITHUB_SHA']+'"}')
+          PY
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
