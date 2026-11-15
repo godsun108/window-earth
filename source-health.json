@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-11-15T11:08:51.345957Z",
+  "generated_at": "2026-11-15T17:48:37.900129Z",
   "schema": "window.source-health.v1",
   "youtube": {
     "Iz0rFcyHf1k": {
-      "checked_at": "2026-11-15T11:08:47.664311Z",
+      "checked_at": "2026-11-15T17:48:33.541456Z",
       "healthy": false
     },
     "Nwnk_jmAMyk": {
-      "checked_at": "2026-11-15T11:08:48.546069Z",
+      "checked_at": "2026-11-15T17:48:34.636101Z",
       "healthy": false
     },
     "fuCeRkeDxtQ": {
-      "checked_at": "2026-11-15T11:08:49.436446Z",
+      "checked_at": "2026-11-15T17:48:35.744588Z",
       "healthy": false
     },
     "nNTVZKz219U": {
-      "checked_at": "2026-11-15T11:08:50.325926Z",
+      "checked_at": "2026-11-15T17:48:36.817145Z",
       "healthy": false
     },
     "qh6Nqiq6LIg": {
-      "checked_at": "2026-11-15T11:08:51.345936Z",
+      "checked_at": "2026-11-15T17:48:37.900107Z",
       "healthy": false
     }
   }
